@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Navbar from './Components/navbar/Navbar'
 import Search from './Components/search/Search'
+import Images from './Components/imageResults/Images'
 
 class App extends Component {
   render () {
@@ -8,6 +9,7 @@ class App extends Component {
       <div>
         <Navbar />
         <Search />
+        <Images />
       </div>
     )
   }
