@@ -6,17 +6,7 @@ import { MenuItem } from 'material-ui/Menu'
 import { FormControl } from 'material-ui/Form'
 import Select from 'material-ui/Select'
 import axios from 'axios'
-
-const styles = theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  formControl: {
-    margin: theme.spacing.unit,
-    minWidth: 200
-  }
-})
+import ImageResults from '../imageResults/ImageResults'
 
 class Search extends Component {
   state = {
@@ -28,8 +18,10 @@ class Search extends Component {
   }
 
   onTextChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
-    this.apiCall()
+    const val = event.target.value
+    this.setState({ [event.target.name]: val }, () => {
+      val === '' ? this.setState({ images: [] }) : this.apiCall()
+    })
   }
 
   apiCall = () => {
@@ -49,7 +41,6 @@ class Search extends Component {
   render () {
     const { classes } = this.props
     console.log(this.state.images)
-
     return (
       <div style={{ padding: '1rem' }}>
         <TextField
@@ -71,9 +62,21 @@ class Search extends Component {
           </Select>
         </FormControl>
         <br />
+        <ImageResults images={this.state.images} />
       </div>
     )
   }
 }
+
+const styles = theme => ({
+  root: {
+    display: 'flex',
+    flexWrap: 'wrap'
+  },
+  formControl: {
+    margin: theme.spacing.unit,
+    minWidth: 200
+  }
+})
 
 export default withStyles(styles)(Search)
