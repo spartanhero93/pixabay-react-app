@@ -4,8 +4,23 @@ import GridList, { GridListTile, GridListTileBar } from 'material-ui/GridList'
 import IconButton from 'material-ui/IconButton'
 import ZoomIn from '@material-ui/icons/ZoomIn'
 import InfoIcon from '@material-ui/icons/Info'
+import Button from 'material-ui/Button'
+import Dialog from 'material-ui/Dialog'
+import { DialogActions } from 'material-ui'
 
 class ImageResults extends Component {
+  state = {
+    open: false,
+    currentImg: ``
+  }
+
+  handleOpen = img => {
+    this.setState({ open: true, currentImg: img })
+  }
+  handleClose = () => {
+    this.setState({ open: false })
+  }
+
   render () {
     let imageListContent
     const images = this.props.images
@@ -20,8 +35,11 @@ class ImageResults extends Component {
                 title={img.tags}
                 subtitle={<span>by: {img.user}</span>}
                 actionIcon={
-                  <IconButton>
-                    <InfoIcon />
+                  <IconButton
+                    color='primary'
+                    onClick={() => this.handleOpen(img.largeImageURL)}
+                  >
+                    <ZoomIn />
                   </IconButton>
                 }
               />
@@ -36,6 +54,16 @@ class ImageResults extends Component {
     return (
       <div>
         {imageListContent}
+        <Dialog
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+        >
+          <img src={this.state.currentImg} alt={``} style={{ width: `100%` }} />
+          <DialogActions>
+            <Button primary onClick={this.handleClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
       </div>
     )
   }
