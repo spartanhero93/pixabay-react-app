@@ -7,6 +7,34 @@ import Button from 'material-ui/Button'
 import Dialog from 'material-ui/Dialog'
 import { DialogActions } from 'material-ui'
 
+const ImageListContent = ({ images }) => {
+  if (images) {
+    return (
+      <GridList cols={3}>
+        {images.map(img => (
+          <GridListTile key={img.id}>
+            <img src={img.largeImageURL} alt='' />
+            <GridListTileBar
+              title={img.tags}
+              subtitle={<span>by: {img.user}</span>}
+              actionIcon={
+                <IconButton
+                  color='primary'
+                  onClick={() => this.handleOpen(img.largeImageURL)}
+                >
+                  <ZoomIn />
+                </IconButton>
+              }
+            />
+          </GridListTile>
+        ))}
+      </GridList>
+    )
+  } else {
+    return <div />
+  }
+}
+
 class ImageResults extends Component {
   state = {
     open: false,
@@ -21,38 +49,10 @@ class ImageResults extends Component {
   }
 
   render() {
-    let imageListContent
     const { images } = this.props
-
-    if (images) {
-      imageListContent = (
-        <GridList cols={3}>
-          {images.map(img => (
-            <GridListTile key={img.id}>
-              <img src={img.largeImageURL} alt='' />
-              <GridListTileBar
-                title={img.tags}
-                subtitle={<span>by: {img.user}</span>}
-                actionIcon={
-                  <IconButton
-                    color='primary'
-                    onClick={() => this.handleOpen(img.largeImageURL)}
-                  >
-                    <ZoomIn />
-                  </IconButton>
-                }
-              />
-            </GridListTile>
-          ))}
-        </GridList>
-      )
-    } else {
-      imageListContent = null
-    }
-
     return (
       <div>
-        {imageListContent}
+        <ImageListContent images={images} />
         <Dialog modal={false} open={this.state.open} onRequestClose={this.handleClose}>
           <img src={this.state.currentImg} alt={``} style={{ width: `100%` }} />
           <DialogActions>
