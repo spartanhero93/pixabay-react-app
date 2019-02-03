@@ -10,7 +10,7 @@ import { DialogActions } from 'material-ui'
 class ImageResults extends Component {
   state = {
     open: false,
-    currentImg: ``
+    currentImg: ``,
   }
 
   handleOpen = img => {
@@ -20,9 +20,9 @@ class ImageResults extends Component {
     this.setState({ open: false })
   }
 
-  render () {
+  render() {
     let imageListContent
-    const images = this.props.images
+    const { images } = this.props
 
     if (images) {
       imageListContent = (
@@ -53,14 +53,12 @@ class ImageResults extends Component {
     return (
       <div>
         {imageListContent}
-        <Dialog
-          modal={false}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
-        >
+        <Dialog modal={false} open={this.state.open} onRequestClose={this.handleClose}>
           <img src={this.state.currentImg} alt={``} style={{ width: `100%` }} />
           <DialogActions>
-            <Button primary onClick={this.handleClose}>Close</Button>
+            <Button primary onClick={this.handleClose}>
+              Close
+            </Button>
           </DialogActions>
         </Dialog>
       </div>
@@ -69,7 +67,7 @@ class ImageResults extends Component {
 }
 
 ImageResults.propTypes = {
-  images: PropTypes.array.isRequired
+  images: PropTypes.array.isRequired,
 }
 
 export default ImageResults
