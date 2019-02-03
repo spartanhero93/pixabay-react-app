@@ -11,41 +11,43 @@ import ImageResults from '../imageResults/ImageResults'
 class Search extends Component {
   state = {
     searchText: '',
-    amount: '',
+    amount: 15,
     apiUrl: 'https://pixabay.com/api',
     apiKey: '8781951-a1771870240ddf96dac845cec',
-    images: []
+    images: [],
   }
 
-  onTextChange = event => {
-    const val = event.target.value
-    this.setState({ [event.target.name]: val }, () => {
-      val === '' ? this.setState({ images: [] }) : this.apiCall()
+  onTextChange = ({ target }) => {
+    this.setState({ [target.name]: target.value }, () => {
+      target.value === '' ? this.setState({ images: [] }) : this.apiCall()
     })
   }
 
-  apiCall = () => {
-    axios
-      .get(
-        `${this.state.apiUrl}/?key=${this.state.apiKey}&q=${this.state.searchText}&image_type=photo&per_page=${this.state.amount}&safesearch=true`
+  apiCall = async () => {
+    try {
+      const { data } = await axios.get(
+        `${this.state.apiUrl}/?key=${this.state.apiKey}&q=${
+          this.state.searchText
+        }&image_type=photo&per_page=${this.state.amount}&safesearch=true`
       )
-      .then(res => {
-        this.setState({ images: res.data.hits })
-      })
+      this.setState({ images: data.hits })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   onAmountChange = event => {
-    this.setState({ amount: event.target.value })
+    this.setState({ amount: event.target.value }, () => this.apiCall())
   }
 
-  render () {
+  render() {
     const { classes } = this.props
-    console.log(this.state.images)
+    const { amount, searchText } = this.state
     return (
       <div style={{ padding: '1rem' }}>
         <TextField
           name='searchText'
-          value={this.state.searchText}
+          value={searchText}
           onChange={this.onTextChange}
           label='search for images!'
           fullWidth
@@ -53,7 +55,7 @@ class Search extends Component {
         <br />
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor='age-simple'>Amount</InputLabel>
-          <Select value={this.state.amount} onChange={this.onAmountChange}>
+          <Select value={amount} onChange={this.onAmountChange}>
             <MenuItem value={5}>5</MenuItem>
             <MenuItem value={10}>10</MenuItem>
             <MenuItem value={15}>15</MenuItem>
@@ -71,12 +73,12 @@ class Search extends Component {
 const styles = theme => ({
   root: {
     display: 'flex',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   formControl: {
     margin: theme.spacing.unit,
-    minWidth: 200
-  }
+    minWidth: 200,
+  },
 })
 
 export default withStyles(styles)(Search)
